@@ -11,14 +11,16 @@ class TeamsWebhook:
 
     _webhook: str
     _session: requests.Session
-    messages: list[str] = []
-    mention_user_target: MentionUser | None = None
+    messages: list[dict]
+    mention_user_target: MentionUser | None
 
     def __init__(self, debug: bool = False):
         (webhook, _, _) = get_setting()
         self._webhook = webhook.debug if debug else webhook.primary
         self._session = requests.Session()
         self._session.headers.update({"Content-Type": "application/json"})
+        self.messages = []
+        self.mention_user_target = None
 
     def add_message(self, message: str):
         self.messages.append({"type": "TextBlock", "text": message})

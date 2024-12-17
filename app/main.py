@@ -10,6 +10,8 @@ from utils.db_handler import DatabaseHandler, DatabaseLogic
 from utils.teams_handler import TeamsWebhook
 from utils.tender_crawler import TenderCrawler
 
+from schduler.task.get_tender import check_new_tender
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -57,4 +59,10 @@ def test_tender():
     DatabaseLogic().insert_tenders(tender_crawler.tenders)
     ids = DatabaseLogic().select_past_tender()
     logger.success(ids)
+    return {"Hello": "World"}
+
+
+@app.get("/test_task")
+def test_task():
+    check_new_tender()
     return {"Hello": "World"}

@@ -6,7 +6,7 @@ from functools import lru_cache
 
 class SchedulerState:
 
-    _run: bool = False
+    _run: bool
 
     def __init__(self) -> None:
         self._run = False

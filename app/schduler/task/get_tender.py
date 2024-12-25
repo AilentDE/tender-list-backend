@@ -1,8 +1,9 @@
 from collections import defaultdict
+from datetime import datetime
 from loguru import logger
 
 from config.state import get_setting
-from utils.db_handler import DatabaseLogic
+from utils.db_handler import DatabaseLogic, tw_timezone
 from utils.tender_crawler import TenderCrawler
 from utils.teams_handler import TeamsWebhook
 
@@ -44,6 +45,17 @@ def check_new_tender():
     teams_handler = TeamsWebhook()
     debuger = TeamsWebhook(debug=True)
     tender_crawler = TenderCrawler()
+
+    # work day check
+    today = datetime.now(tw_timezone)
+    if today.weekday() <= 4 and today.strftime("%Y-%m-%d") in date.holidays:
+        logger.info("Today is holiday, skip job")
+        return
+    elif today.weekday() > 4 and today.strftime("%Y-%m-%d") not in date.workdays:
+        logger.info("Today is weekend, skip job")
+        return
+    else:
+        logger.info("Today is workday, start checking tenders")
 
     # get tenders
     try:

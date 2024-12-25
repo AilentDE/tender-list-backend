@@ -18,7 +18,7 @@ def status():
 
 @router.post("/start")
 def start():
-    app_scheduler.resume_job("print_time")
+    app_scheduler.resume_job("check_new_tender")
     scheduler_state.start()
     return BaseResponse(
         message="start scheduler successfully",
@@ -28,7 +28,7 @@ def start():
 
 @router.post("/pause")
 def pause():
-    app_scheduler.pause_job("print_time")
+    app_scheduler.pause_job("check_new_tender")
     scheduler_state.stop()
     return BaseResponse(
         message="pause scheduler successfully",

@@ -24,6 +24,7 @@ async def lifespan(app: FastAPI):
         init_tenders()
 
     scheduler_jobs_start(app_scheduler)
+    logger.info("Scheduler started")
     yield
     logger.success("Server shutdown")
 

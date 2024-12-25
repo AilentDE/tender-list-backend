@@ -5,12 +5,13 @@ from config.state import get_setting
 from utils.db_handler import DatabaseLogic
 from utils.tender_crawler import TenderCrawler
 from utils.teams_handler import TeamsWebhook
-from utils.time_helper import delay_request
+
+# from utils.time_helper import delay_request
 
 
-@delay_request(delay=1, random_delay=2)
-def delay_check_new_tender():
-    return None
+# @delay_request(delay=1, random_delay=2)
+# def delay_check_new_tender():
+#     return None
 
 
 def check_new_tender():
@@ -23,10 +24,10 @@ def check_new_tender():
     try:
         for keyword in tag.tags:
             tender_crawler.get_tenders(keyword=keyword)
-            delay_check_new_tender()
+            # delay_check_new_tender()
         for org in tag.org_tags:
             tender_crawler.get_tenders(org=org)
-            delay_check_new_tender()
+            # delay_check_new_tender()
     except Exception as e:
         logger.error(f"Error getting tenders: {e}")
 

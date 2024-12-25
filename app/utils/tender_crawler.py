@@ -4,6 +4,7 @@ from loguru import logger
 import re
 
 from schema.tender import Tender
+from utils.time_helper import delay_request
 
 
 class TenderCrawler:
@@ -21,6 +22,7 @@ class TenderCrawler:
             }
         )
 
+    @delay_request(delay=1, random_delay=2)
     def get_tenders(self, keyword: str = "", org: str = ""):
         if keyword == "" and org == "":
             return

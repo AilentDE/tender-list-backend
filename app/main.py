@@ -10,15 +10,18 @@ from utils.db_handler import DatabaseHandler, DatabaseLogic
 from utils.teams_handler import TeamsWebhook
 from utils.tender_crawler import TenderCrawler
 
-from schduler.task.get_tender import check_new_tender
+from schduler.task.get_tender import check_new_tender, init_tenders
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     db_handler = DatabaseHandler()
     db_handler.init_table()
-    db_handler.init_data()
+    db_handler.init_setting()
     db_handler.close()
+
+    if not db_handler.no_rebuild:
+        init_tenders()
 
     scheduler_jobs_start(app_scheduler)
     yield

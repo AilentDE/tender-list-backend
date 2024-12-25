@@ -6,12 +6,37 @@ from utils.db_handler import DatabaseLogic
 from utils.tender_crawler import TenderCrawler
 from utils.teams_handler import TeamsWebhook
 
-# from utils.time_helper import delay_request
 
+def init_tenders():
+    logger.warning("Init tenders since it's rebuild database")
+    _, _, tag = get_setting()
+    tender_crawler = TenderCrawler()
 
-# @delay_request(delay=1, random_delay=2)
-# def delay_check_new_tender():
-#     return None
+    # get tenders
+    try:
+        for keyword in tag.tags:
+            tender_crawler.get_tenders(keyword=keyword)
+        for org in tag.org_tags:
+            tender_crawler.get_tenders(org=org)
+    except Exception as e:
+        logger.error(f"Error getting first tenders: {e}")
+        raise e
+
+    # duplicate check
+    tender_collection = defaultdict(list)
+    for tender in tender_crawler.tenders:
+        tender_collection[tender.ref_id].append(tender)
+    tender_list = [collect_value[-1] for collect_value in tender_collection.values()]
+
+    # save to db
+    try:
+        DatabaseLogic().insert_tenders(tender_list)
+    except Exception as e:
+        logger.error(f"Error saving tenders to db: {e}")
+        raise e
+
+    logger.success("Crawl first tenders successfully")
+    return
 
 
 def check_new_tender():
@@ -24,10 +49,8 @@ def check_new_tender():
     try:
         for keyword in tag.tags:
             tender_crawler.get_tenders(keyword=keyword)
-            # delay_check_new_tender()
         for org in tag.org_tags:
             tender_crawler.get_tenders(org=org)
-            # delay_check_new_tender()
     except Exception as e:
         logger.error(f"Error getting tenders: {e}")
 
@@ -116,3 +139,6 @@ def check_new_tender():
         debuger.add_message(f"Error saving tenders to db: {e}")
         debuger.send_message()
         return
+
+    logger.success("Crawl new tenders successfully")
+    return

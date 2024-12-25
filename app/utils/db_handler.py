@@ -24,13 +24,13 @@ DB_PATH = "data/tender.db"
 class DatabaseHandler:
 
     def __init__(self) -> None:
-        self.rebuild = os.path.exists(DB_PATH)
+        self.no_rebuild = os.path.exists(DB_PATH)
         self.db = sqlite3.connect(DB_PATH)
         self.cur = self.db.cursor()
         logger.success(f"Database connected: {DB_PATH}")
 
     def init_table(self):
-        if self.rebuild:
+        if self.no_rebuild:
             logger.info("Database already exists, pass for init table")
             return
         # tender table
@@ -84,8 +84,8 @@ class DatabaseHandler:
         self.db.commit()
         logger.warning("Database initialized")
 
-    def init_data(self):
-        if self.rebuild:
+    def init_setting(self):
+        if self.no_rebuild:
             logger.info("Database already exists, pass for init data")
             return
         # webhook

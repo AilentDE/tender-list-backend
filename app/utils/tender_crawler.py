@@ -11,7 +11,7 @@ class TenderCrawler:
 
     _session: requests.Session
     _url: str = "https://web.pcc.gov.tw/prkms/tender/common/basic/readTenderBasic"
-    tenders: list[Tender] = []
+    tenders: list[Tender]
 
     def __init__(self):
         self._session = requests.Session()
@@ -21,6 +21,7 @@ class TenderCrawler:
                 " AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
             }
         )
+        self.tenders = []
 
     @delay_request(delay=1, random_delay=2)
     def get_tenders(self, keyword: str = "", org: str = ""):

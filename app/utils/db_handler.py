@@ -14,11 +14,12 @@ from schema.setting import (
 )
 from schema.tender import Tender
 
-load_dotenv()
+if os.path.exists(".env"):
+    load_dotenv()
 
 tw_timezone = timezone(timedelta(hours=8), "Asia/Taipei")
 
-DB_PATH = "data/tender.db"
+DB_PATH = os.getenv("DB_PATH")
 
 
 class DatabaseHandler:

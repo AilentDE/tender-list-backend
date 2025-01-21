@@ -1,0 +1,18 @@
+services:
+  tender_bot_backend:
+    build: .
+    image: tender_bot_backend
+    container_name: tender_bot_backend
+    ports:
+      - 8001:8000
+    env_file:
+      - .env
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    networks:
+      - tender_bot_network
+
+networks:
+  tender_bot_network:
+    external: true
